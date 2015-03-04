@@ -24,7 +24,7 @@
 
             pinnedSector.Free();
 
-            _bytesPerSector = DiskGeometry.BytesPerSector;
+            BytesPerSector = DiskGeometry.BytesPerSector;
         }
     }
 }

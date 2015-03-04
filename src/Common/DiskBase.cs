@@ -83,11 +83,14 @@
 
         // SetPointer / Read / Write
 
-        protected UInt32 _bytesPerSector = 512;
-
         private Int64 SectorToOffset(UInt64 sector)
         {
-            return (Int64)sector * _bytesPerSector;
+            if (BytesPerSector <= 0)
+            {
+                throw new InvalidOperationException("Call ReadDiskInformation() first.");
+            }
+
+            return (Int64)sector * BytesPerSector;
         }
 
         private void SetPointer(Int64 offset)
@@ -133,10 +136,8 @@
 
         public Byte[] ReadSectors(UInt64 firstSector, UInt32 numberOfSectors)
         {
-            var size = numberOfSectors * _bytesPerSector;
-            var buffer = new Byte[size];
-
             var offset = SectorToOffset(firstSector);
+            var size = numberOfSectors * BytesPerSector;
 
             return Read(offset, size);
         }
@@ -146,11 +147,13 @@
             throw new NotImplementedException();
         }
 
-        // ReadDiskInformation
+        // Disk information
+
+        public UInt32 BytesPerSector { get; protected set; }
 
         public virtual void ReadDiskInformation()
         {
-            _bytesPerSector = 512;
+            BytesPerSector = 512; // TODO
         }
 
     }

@@ -43,8 +43,23 @@
 
                 using (var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None))
                 {
-                    var bytes = disk.ReadSectors(firstSector, numberOfSectors);
-                    fileStream.Write(bytes, 0, bytes.Length);
+                    var sectorsPerChunk = 65536 / disk.BytesPerSector; // max 64KB at once
+                    var numberOfFullChunks = numberOfSectors / sectorsPerChunk;
+                    
+                    for (int i = 0; i < numberOfFullChunks; i++)
+                    {
+                        var bytes = disk.ReadSectors(firstSector, sectorsPerChunk);
+                        fileStream.Write(bytes, 0, bytes.Length);
+
+                        firstSector += sectorsPerChunk;
+                    }
+
+                    numberOfSectors = numberOfSectors % sectorsPerChunk; // remaining part
+                    if (numberOfSectors > 0)
+                    {
+                        var bytes = disk.ReadSectors(firstSector, numberOfSectors);
+                        fileStream.Write(bytes, 0, bytes.Length);
+                    }
                 }
 
                 return 0;
