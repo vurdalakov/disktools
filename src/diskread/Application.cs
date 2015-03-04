@@ -41,24 +41,27 @@
 
                 disk.ReadDiskInformation();
 
-                using (var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None))
+                Byte[] buffer = new Byte[65536]; // 64KB at once
+
+                using (var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None, buffer.Length))
                 {
-                    var sectorsPerChunk = 65536 / disk.BytesPerSector; // max 64KB at once
-                    var numberOfFullChunks = numberOfSectors / sectorsPerChunk;
+                    var fullSize = numberOfSectors * disk.BytesPerSector;
+                    var numberOfFullChunks = fullSize / buffer.Length;
+                    var offset = disk.SectorToOffset(firstSector);
                     
                     for (int i = 0; i < numberOfFullChunks; i++)
                     {
-                        var bytes = disk.ReadSectors(firstSector, sectorsPerChunk);
-                        fileStream.Write(bytes, 0, bytes.Length);
+                        disk.Read(offset, (UInt32)buffer.Length, ref buffer, true);
+                        fileStream.Write(buffer, 0, buffer.Length);
 
-                        firstSector += sectorsPerChunk;
+                        offset += buffer.Length;
                     }
 
-                    numberOfSectors = numberOfSectors % sectorsPerChunk; // remaining part
-                    if (numberOfSectors > 0)
+                    var size = fullSize % buffer.Length; // remaining part
+                    if (size > 0)
                     {
-                        var bytes = disk.ReadSectors(firstSector, numberOfSectors);
-                        fileStream.Write(bytes, 0, bytes.Length);
+                        disk.Read(offset, (UInt32)size, ref buffer, true);
+                        fileStream.Write(buffer, 0, (Int32)size);
                     }
                 }
 

@@ -83,17 +83,7 @@
 
         // SetPointer / Read / Write
 
-        private Int64 SectorToOffset(UInt64 sector)
-        {
-            if (BytesPerSector <= 0)
-            {
-                throw new InvalidOperationException("Call ReadDiskInformation() first.");
-            }
-
-            return (Int64)sector * BytesPerSector;
-        }
-
-        private void SetPointer(Int64 offset)
+        virtual protected Int64 SetPointer(Int64 offset, Boolean throwOnFail)
         {
             Int64 newOffset;
             if (!Kernel32.SetFilePointerEx(_handle, offset, out newOffset, Kernel32.FILE_BEGIN))
@@ -101,17 +91,17 @@
                 Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
             }
 
-            if (newOffset != offset)
+            if (throwOnFail && (newOffset != offset))
             {
                 throw new IOException();
             }
+
+            return newOffset;
         }
 
-        virtual public Byte[] Read(Int64 offset, UInt32 size)
+        virtual public UInt32 Read(Int64 offset, UInt32 size, ref Byte[] buffer, Boolean throwOnFail)
         {
-            Byte[] buffer = new Byte[size];
-
-            SetPointer(offset);
+            SetPointer(offset, true);
 
             UInt32 bytesRead;
             if (!Kernel32.ReadFile(_handle, buffer, size, out bytesRead, IntPtr.Zero))
@@ -119,10 +109,19 @@
                 Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
             }
 
-            if (bytesRead != size)
+            if (throwOnFail && (bytesRead != size))
             {
                 throw new IOException();
             }
+
+            return bytesRead;
+        }
+
+        virtual public Byte[] Read(Int64 offset, UInt32 size)
+        {
+            Byte[] buffer = new Byte[size];
+
+            Read(offset, size, ref buffer, true);
 
             return buffer;
         }
@@ -150,6 +149,16 @@
         // Disk information
 
         public UInt32 BytesPerSector { get; protected set; }
+
+        public Int64 SectorToOffset(UInt64 sector)
+        {
+            if (BytesPerSector <= 0)
+            {
+                throw new InvalidOperationException("Call ReadDiskInformation() first.");
+            }
+
+            return (Int64)sector * BytesPerSector;
+        }
 
         public virtual void ReadDiskInformation()
         {
