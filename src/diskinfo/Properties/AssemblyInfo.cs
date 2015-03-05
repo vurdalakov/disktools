@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("diskinfo")]
-[assembly: AssemblyDescription("Reads various device information")]
+[assembly: AssemblyDescription("Reads various disk information")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Vurdalakov")]
 [assembly: AssemblyProduct("DosTools")]

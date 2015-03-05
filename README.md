@@ -13,3 +13,7 @@ They are distributed under the [MIT license](http://opensource.org/licenses/MIT)
 ###### diskread
 
 Reads sectors from physical or logical disk to a file.
+
+###### diskinfo
+
+Shows various disk information.
