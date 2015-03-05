@@ -17,11 +17,13 @@
                 throw new ArgumentNullException("path");
             }
 
+            Close();
+
             UInt32 desiredAccess = Kernel32.GENERIC_READ | (readOnly ? 0 : Kernel32.GENERIC_WRITE);
 
             _handle = Kernel32.CreateFile(path, desiredAccess, Kernel32.FILE_SHARE_READ | Kernel32.FILE_SHARE_WRITE, IntPtr.Zero, Kernel32.OPEN_EXISTING, 0, IntPtr.Zero);
 
-            if (IntPtr.Zero == _handle)
+            if (Kernel32.INVALID_HANDLE_VALUE == _handle.ToInt32())
             {
                 Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
             }

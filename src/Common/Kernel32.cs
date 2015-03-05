@@ -7,6 +7,8 @@
     {
         public const UInt32 ERROR_INSUFFICIENT_BUFFER = 122;
 
+        public const Int32 INVALID_HANDLE_VALUE = -1;
+
         // CreateFile
         // http://msdn.microsoft.com/en-us/library/windows/desktop/aa363858
 
