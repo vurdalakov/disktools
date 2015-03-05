@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "diskread", "diskread\diskread.csproj", "{91ECA85F-F4FF-4E87-AA0C-100F74F5CA98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "diskinfo", "diskinfo\diskinfo.csproj", "{B8C491B1-6B60-409E-B72B-05B57E3CC08A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{91ECA85F-F4FF-4E87-AA0C-100F74F5CA98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91ECA85F-F4FF-4E87-AA0C-100F74F5CA98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91ECA85F-F4FF-4E87-AA0C-100F74F5CA98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8C491B1-6B60-409E-B72B-05B57E3CC08A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8C491B1-6B60-409E-B72B-05B57E3CC08A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8C491B1-6B60-409E-B72B-05B57E3CC08A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8C491B1-6B60-409E-B72B-05B57E3CC08A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

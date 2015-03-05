@@ -5,6 +5,8 @@
 
     public static class Kernel32
     {
+        public const UInt32 ERROR_INSUFFICIENT_BUFFER = 122;
+
         // CreateFile
         // http://msdn.microsoft.com/en-us/library/windows/desktop/aa363858
 
@@ -75,5 +77,10 @@
             public UInt32 SectorsPerTrack;
             public UInt32 BytesPerSector;
         }
+
+        // QueryDosDevice
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern UInt32 QueryDosDevice(String lpDeviceName, IntPtr lpTargetPath, UInt32 ucchMax);
     }
 }
