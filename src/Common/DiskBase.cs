@@ -2,7 +2,7 @@
 {
     using System;
     using System.Runtime.InteropServices;
-    using System.IO; // IOException
+    using System.IO;
 
     public class DiskBase : IDisposable
     {
@@ -25,7 +25,19 @@
 
             if (Kernel32.INVALID_HANDLE_VALUE == _handle.ToInt32())
             {
-                Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
+                var error = Marshal.GetLastWin32Error();
+
+                try
+                {
+                    Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
+                }
+                catch (Exception ex)
+                {
+                    if (Kernel32.ERROR_ACCESS_DENIED == error)
+                    {
+                        throw new InvalidOperationException("Run this application with local admin rights!", ex);
+                    }
+                }
             }
         }
 

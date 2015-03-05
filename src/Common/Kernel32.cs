@@ -5,6 +5,7 @@
 
     public static class Kernel32
     {
+        public const UInt32 ERROR_ACCESS_DENIED = 5;
         public const UInt32 ERROR_INSUFFICIENT_BUFFER = 122;
 
         public const Int32 INVALID_HANDLE_VALUE = -1;
