@@ -10,7 +10,7 @@
         {
             var devices = VolumeManagement.QueryDosDevice(null);
 
-            var diskNumbers = new List<UInt32>();
+            var disks = new List<UInt32>();
 
             foreach (var device in devices)
             {
@@ -20,13 +20,16 @@
                 {
                     try
                     {
-                        diskNumbers.Add(UInt32.Parse(device.Substring(prefix.Length)));
+                        var disk = UInt32.Parse(device.Substring(prefix.Length));
+                        disks.Add(disk);
                     }
                     catch { }
                 }
             }
 
-            return diskNumbers.ToArray();
+            disks.Sort();
+
+            return disks.ToArray();
         }
 
         public Kernel32.DISK_GEOMETRY DiskGeometry { get; private set; }

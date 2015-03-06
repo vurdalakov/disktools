@@ -14,17 +14,17 @@
             {
                 Console.WriteLine("\n--- Physical disk {0}\n", diskNumber);
 
-                var physicalDisk = new PhysicalDisk(diskNumber);
-                physicalDisk.ReadDiskInformation();
+                var disk = new PhysicalDisk(diskNumber);
+                disk.ReadDiskInformation();
 
                 Console.WriteLine("DISK_GEOMETRY:");
-                Console.WriteLine("Cylinders:\t\t{0}", physicalDisk.DiskGeometry.Cylinders);
-                Console.WriteLine("MediaType:\t\t{0}", physicalDisk.DiskGeometry.MediaType);
-                Console.WriteLine("TracksPerCylinder:\t{0}", physicalDisk.DiskGeometry.TracksPerCylinder);
-                Console.WriteLine("SectorsPerTrack:\t{0}", physicalDisk.DiskGeometry.SectorsPerTrack);
-                Console.WriteLine("BytesPerSector:\t\t{0}", physicalDisk.DiskGeometry.BytesPerSector);
+                Console.WriteLine("Cylinders:\t\t{0}", disk.DiskGeometry.Cylinders);
+                Console.WriteLine("MediaType:\t\t{0}", disk.DiskGeometry.MediaType);
+                Console.WriteLine("TracksPerCylinder:\t{0}", disk.DiskGeometry.TracksPerCylinder);
+                Console.WriteLine("SectorsPerTrack:\t{0}", disk.DiskGeometry.SectorsPerTrack);
+                Console.WriteLine("BytesPerSector:\t\t{0}", disk.DiskGeometry.BytesPerSector);
 
-                var diskSize = physicalDisk.DiskGeometry.Cylinders * physicalDisk.DiskGeometry.TracksPerCylinder * physicalDisk.DiskGeometry.SectorsPerTrack * physicalDisk.DiskGeometry.BytesPerSector;
+                var diskSize = disk.DiskGeometry.Cylinders * disk.DiskGeometry.TracksPerCylinder * disk.DiskGeometry.SectorsPerTrack * disk.DiskGeometry.BytesPerSector;
                 Console.WriteLine("\nDisk size:\t\t{0:N0} bytes", diskSize);
             }
 
@@ -36,9 +36,10 @@
             {
                 Console.WriteLine("\n--- Logical disk {0}:\n", diskChar);
 
-                var logicalDisk = new LogicalDisk(diskChar);
-                logicalDisk.ReadDiskInformation();
+                var disk = new LogicalDisk(diskChar);
+                disk.ReadDiskInformation();
 
+                Console.WriteLine("BytesPerSector:\t\t{0}", disk.BytesPerSector);
             }
         }
     }

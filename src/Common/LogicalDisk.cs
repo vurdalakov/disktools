@@ -9,21 +9,24 @@
         {
             var devices = VolumeManagement.QueryDosDevice(null);
 
-            var diskChars = new List<Char>();
+            var disks = new List<Char>();
 
             foreach (var device in devices)
             {
                 if ((2 == device.Length) && (':' == device[1]))
                 {
-                    var diskChar = Char.ToUpper(device[0]);
-                    if ((diskChar >= 'A') && (diskChar <= 'Z'))
+                    var disk = Char.ToUpper(device[0]);
+
+                    if ((disk >= 'A') && (disk <= 'Z'))
                     {
-                        diskChars.Add(diskChar);
+                        disks.Add(disk);
                     }
                 }
             }
 
-            return diskChars.ToArray();
+            disks.Sort();
+
+            return disks.ToArray();
         }
 
         public LogicalDisk(char volume)
