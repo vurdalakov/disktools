@@ -58,6 +58,7 @@
     <Compile Include="..\Common\PhysicalDisk.cs">
       <Link>Common\PhysicalDisk.cs</Link>
     </Compile>
+    <Compile Include="Common\VolumeManagement.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

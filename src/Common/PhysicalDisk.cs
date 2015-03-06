@@ -6,58 +6,27 @@
 
     public class PhysicalDisk : DiskBase
     {
-        public static UInt32[] GetList()
+        public static UInt32[] GetDisks()
         {
-            var responseSize = 65536;
+            var devices = VolumeManagement.QueryDosDevice(null);
 
-            while (true)
+            var diskNumbers = new List<UInt32>();
+
+            foreach (var device in devices)
             {
-                var response = Marshal.AllocHGlobal(responseSize);
-                if (IntPtr.Zero == response)
-                {
-                    throw new OutOfMemoryException();
-                }
+                const String prefix = "PhysicalDrive";
 
-                try
+                if (device.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    var responseLength = Kernel32.QueryDosDevice(null, response, (UInt32)responseSize);
-                    
-                    if (0 == responseLength)
+                    try
                     {
-                        if (Kernel32.ERROR_INSUFFICIENT_BUFFER == Marshal.GetLastWin32Error())
-                        {
-                            responseSize *= 2;
-                            continue;
-                        }
-
-                        Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
+                        diskNumbers.Add(UInt32.Parse(device.Substring(prefix.Length)));
                     }
-
-                    var devices = Marshal.PtrToStringAuto(response, (Int32)responseLength).Split('\0');
-
-                    var diskNumbers = new List<UInt32>();
-
-                    foreach (var device in devices)
-                    {
-                        const String prefix = "PhysicalDrive";
-
-                        if (device.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            try
-                            {
-                                diskNumbers.Add(UInt32.Parse(device.Substring(prefix.Length)));
-                            }
-                            catch { }
-                        }
-                    }
-
-                    return diskNumbers.ToArray();
-                }
-                finally
-                {
-                    Marshal.FreeHGlobal(response);
+                    catch { }
                 }
             }
+
+            return diskNumbers.ToArray();
         }
 
         public Kernel32.DISK_GEOMETRY DiskGeometry { get; private set; }

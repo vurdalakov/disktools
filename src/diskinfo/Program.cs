@@ -6,7 +6,7 @@
     {
         static void Main(string[] args)
         {
-            var diskNumbers = PhysicalDisk.GetList();
+            var diskNumbers = PhysicalDisk.GetDisks();
 
             foreach (var diskNumber in diskNumbers)
             {
