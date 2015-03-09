@@ -6,6 +6,15 @@
 
     public class DiskBase : IDisposable
     {
+        // TODO: DeviceName property
+
+        // TODO: default constructor?
+
+        public DiskBase(String deviceName, Boolean readOnly)
+        {
+            Open(deviceName, readOnly);
+        }
+
         // Open / Close
 
         private IntPtr _handle = IntPtr.Zero;
@@ -176,7 +185,7 @@
 
         public virtual void ReadDiskInformation()
         {
-            BytesPerSector = 512; // TODO
+            BytesPerSector = 512; // TODO: abstract
         }
 
     }

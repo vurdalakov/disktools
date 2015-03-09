@@ -14,7 +14,7 @@
             {
                 Console.WriteLine("\n--- Physical disk {0}\n", diskNumber);
 
-                var disk = new PhysicalDisk(diskNumber);
+                var disk = new PhysicalDisk(diskNumber, true);
                 disk.ReadDiskInformation();
 
                 Console.WriteLine("DISK_GEOMETRY:");
@@ -36,7 +36,7 @@
             {
                 Console.WriteLine("\n--- Logical disk {0}:\n", diskChar);
 
-                var disk = new LogicalDisk(diskChar);
+                var disk = new LogicalDisk(diskChar, true); // TODO: using
                 disk.ReadDiskInformation();
 
                 Console.WriteLine("BytesPerSector:\t\t{0}", disk.BytesPerSector);

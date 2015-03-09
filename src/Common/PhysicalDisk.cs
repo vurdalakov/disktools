@@ -34,9 +34,8 @@
 
         public Kernel32.DISK_GEOMETRY DiskGeometry { get; private set; }
 
-        public PhysicalDisk(UInt32 diskNumber)
+        public PhysicalDisk(UInt32 diskNumber, Boolean readOnly) : base(String.Format("\\\\.\\PhysicalDrive{0}", diskNumber), readOnly)
         {
-            Open(String.Format("\\\\.\\PhysicalDrive{0}", diskNumber), true);
         }
 
         public override void ReadDiskInformation()

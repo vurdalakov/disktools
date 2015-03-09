@@ -29,16 +29,8 @@
             return disks.ToArray();
         }
 
-        public LogicalDisk(char volume)
+        public LogicalDisk(char volume, Boolean readOnly) : base(String.Format("\\\\.\\{0}:", volume), readOnly)
         {
-            volume = Char.ToUpper(volume);
-
-            if ((volume < 'A') || (volume > 'Z'))
-            {
-                throw new ArgumentException("volume");
-            }
-
-            Open(String.Format("\\\\.\\{0}:", volume), true);
         }
     }
 }
