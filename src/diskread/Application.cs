@@ -28,11 +28,11 @@
 
                 if ((diskNumber >= '0') && (diskNumber <= '9'))
                 {
-                    disk = new PhysicalDisk((UInt32)diskNumber - 48);
+                    disk = new PhysicalDisk((UInt32)diskNumber - 48, true);
                 }
                 else if ((diskNumber >= 'A') && (diskNumber <= 'Z'))
                 {
-                    disk = new LogicalDisk(diskNumber);
+                    disk = new LogicalDisk(diskNumber, true);
                 }
                 else
                 {
