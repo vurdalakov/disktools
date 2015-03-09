@@ -4,7 +4,7 @@
 
     class Program
     {
-        static void Main(string[] args)
+        static void Main(String[] args)
         {
             var application = new Application();
             application.Run();
