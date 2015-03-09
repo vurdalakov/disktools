@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Runtime.InteropServices;
 
     public class LogicalDisk : DiskBase
     {
@@ -29,8 +30,55 @@
             return disks.ToArray();
         }
 
-        public LogicalDisk(char volume, Boolean readOnly) : base(String.Format("\\\\.\\{0}:", volume), readOnly)
+        public Kernel32.PARTITION_INFORMATION PartitionInformation { get; private set; }
+
+        public LogicalDisk(char volume, Boolean readOnly)
+            : base(String.Format("\\\\.\\{0}:", volume), readOnly)
         {
+        }
+
+        public override void ReadDiskInformation()
+        {
+            // PARTITION_INFORMATION
+
+            PartitionInformation = new Kernel32.PARTITION_INFORMATION();
+
+            var buffer = DeviceIoControl(Kernel32.IOCTL_DISK_GET_PARTITION_INFO, Convert.ToUInt32(Marshal.SizeOf(PartitionInformation)));
+
+            var pinnedSector = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+
+            PartitionInformation = (Kernel32.PARTITION_INFORMATION)Marshal.PtrToStructure(pinnedSector.AddrOfPinnedObject(), typeof(Kernel32.PARTITION_INFORMATION));
+
+            pinnedSector.Free();
+
+            //BytesPerSector = PartitionInformation.BytesPerSector;
+        }
+
+        public static String GetPartitionTypeString(Byte partitionType)
+        {
+            switch (partitionType)
+            {
+                case 0x00:
+                    return "PARTITION_ENTRY_UNUSED";
+                case 0x01:
+                    return "PARTITION_FAT_12";
+                case 0x04:
+                    return "PARTITION_FAT_16";
+                case 0x05:
+                    return "PARTITION_EXTENDED";
+                case 0x07:
+                    return "PARTITION_IFS";
+                case 0x0B:
+                    return "PARTITION_FAT32";
+                case 0x42:
+                    return "PARTITION_LDM";
+                case 0x80:
+                    return "PARTITION_NTFT";
+                case 0xC0:
+                    return "VALID_NTFT";
+                default:
+                    return "";
+            }
         }
     }
 }

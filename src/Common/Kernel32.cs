@@ -3,7 +3,7 @@
     using System;
     using System.Runtime.InteropServices;
 
-    public static class Kernel32
+    public static class Kernel32 // TODO: rename to Win32
     {
         public const UInt32 ERROR_ACCESS_DENIED = 5;
         public const UInt32 ERROR_INSUFFICIENT_BUFFER = 122;
@@ -67,6 +67,7 @@
         public static extern bool DeviceIoControl(IntPtr hDevice, UInt32 dwIoControlCode, [In] Byte[] lpInBuffer, UInt32 nInBufferSize, [Out] Byte[] lpOutBuffer, UInt32 nOutBufferSize, out UInt32 lpBytesReturned, IntPtr lpOverlapped);
 
         public const UInt32 IOCTL_DISK_GET_DRIVE_GEOMETRY = 0x00070000;
+        public const UInt32 IOCTL_DISK_GET_PARTITION_INFO = 0x00074004;
 
         // DISK_GEOMETRY
         // http://msdn.microsoft.com/en-us/library/windows/desktop/aa363972
@@ -79,6 +80,22 @@
             public UInt32 TracksPerCylinder;
             public UInt32 SectorsPerTrack;
             public UInt32 BytesPerSector;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct PARTITION_INFORMATION
+        {
+            public Int64 StartingOffset;
+            public Int64 PartitionLength;
+            public UInt32 HiddenSectors;
+            public UInt32 PartitionNumber;
+            public Byte PartitionType; // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363990
+            [MarshalAs(UnmanagedType.I1)]
+            public Boolean BootIndicator;
+            [MarshalAs(UnmanagedType.I1)]
+            public Boolean RecognizedPartition;
+            [MarshalAs(UnmanagedType.I1)]
+            public Boolean RewritePartition;
         }
 
         // QueryDosDevice

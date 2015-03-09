@@ -39,7 +39,15 @@
                 var disk = new LogicalDisk(diskChar, true); // TODO: using
                 disk.ReadDiskInformation();
 
-                Console.WriteLine("BytesPerSector:\t\t{0}", disk.BytesPerSector);
+                Console.WriteLine("PARTITION_INFORMATION:");
+                Console.WriteLine("StartingOffset:\t\t{0:N0}", disk.PartitionInformation.StartingOffset);
+                Console.WriteLine("PartitionLength:\t{0:N0}", disk.PartitionInformation.PartitionLength);
+                Console.WriteLine("HiddenSectors:\t\t{0:N0}", disk.PartitionInformation.HiddenSectors);
+                Console.WriteLine("PartitionNumber:\t{0}", disk.PartitionInformation.PartitionNumber);
+                Console.WriteLine("PartitionType:\t\t0x{0:X2} ({1})", disk.PartitionInformation.PartitionType, LogicalDisk.GetPartitionTypeString(disk.PartitionInformation.PartitionType));
+                Console.WriteLine("BootIndicator:\t\t{0}", disk.PartitionInformation.BootIndicator);
+                Console.WriteLine("RecognizedPartition:\t{0}", disk.PartitionInformation.RecognizedPartition);
+                Console.WriteLine("RewritePartition:\t{0}", disk.PartitionInformation.RewritePartition);
             }
         }
     }
