@@ -6,7 +6,7 @@
 
     public class DiskBase : IDisposable
     {
-        // TODO: DeviceName property
+        public String DeviceName { get; private set; }
 
         // TODO: default constructor?
 
@@ -19,9 +19,9 @@
 
         private IntPtr _handle = IntPtr.Zero;
 
-        public void Open(String path, bool readOnly)
+        public void Open(String deviceName, bool readOnly)
         {
-            if (String.IsNullOrEmpty(path))
+            if (String.IsNullOrEmpty(deviceName))
             {
                 throw new ArgumentNullException("path");
             }
@@ -30,7 +30,7 @@
 
             UInt32 desiredAccess = Kernel32.GENERIC_READ | (readOnly ? 0 : Kernel32.GENERIC_WRITE);
 
-            _handle = Kernel32.CreateFile(path, desiredAccess, Kernel32.FILE_SHARE_READ | Kernel32.FILE_SHARE_WRITE, IntPtr.Zero, Kernel32.OPEN_EXISTING, 0, IntPtr.Zero);
+            _handle = Kernel32.CreateFile(deviceName, desiredAccess, Kernel32.FILE_SHARE_READ | Kernel32.FILE_SHARE_WRITE, IntPtr.Zero, Kernel32.OPEN_EXISTING, 0, IntPtr.Zero);
 
             if (Kernel32.INVALID_HANDLE_VALUE == _handle.ToInt32())
             {
@@ -46,8 +46,12 @@
                     {
                         throw new InvalidOperationException("Run this application with local admin rights!", ex);
                     }
+
+                    throw;
                 }
             }
+
+            DeviceName = deviceName;
         }
 
         public void Close()
