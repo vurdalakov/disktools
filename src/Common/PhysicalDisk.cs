@@ -40,15 +40,7 @@
 
         public override void ReadDiskInformation()
         {
-            DiskGeometry = new Kernel32.DISK_GEOMETRY();
-
-            var buffer = DeviceIoControl(Kernel32.IOCTL_DISK_GET_DRIVE_GEOMETRY, Convert.ToUInt32(Marshal.SizeOf(DiskGeometry)));
-
-            var pinnedSector = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-
-            DiskGeometry = (Kernel32.DISK_GEOMETRY)Marshal.PtrToStructure(pinnedSector.AddrOfPinnedObject(), typeof(Kernel32.DISK_GEOMETRY));
-
-            pinnedSector.Free();
+            DiskGeometry = DeviceIoControl<Kernel32.DISK_GEOMETRY>(Kernel32.IOCTL_DISK_GET_DRIVE_GEOMETRY);
 
             BytesPerSector = DiskGeometry.BytesPerSector;
         }
