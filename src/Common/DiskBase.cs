@@ -79,13 +79,30 @@
 
         // DeviceIoControl
 
-        public T DeviceIoControl<T>(UInt32 ioControlCode) where T : struct
+        public TypeOut DeviceIoControl<TypeOut>(UInt32 ioControlCode) where TypeOut : struct
         {
-            var outStruct = MarshalEx.AllocateBytesForStruct<T>();
+            var outBytes = MarshalEx.AllocateBytesForStruct<TypeOut>();
 
-            DeviceIoControl(ioControlCode, new Byte[0], 0, outStruct, Convert.ToUInt32(outStruct.Length));
+            DeviceIoControl(ioControlCode, new Byte[0], 0, outBytes, outBytes.Length);
 
-            return MarshalEx.BytesToStruct<T>(ref outStruct);
+            return MarshalEx.BytesToStruct<TypeOut>(outBytes);
+        }
+
+        public void DeviceIoControl<TypeIn>(UInt32 ioControlCode, TypeIn inStruct) where TypeIn : struct
+        {
+            var inBytes = MarshalEx.StructToBytes<TypeIn>(inStruct);
+
+            DeviceIoControl(ioControlCode, inBytes, inBytes.Length, new Byte[0], 0);
+        }
+
+        public TypeOut DeviceIoControl<TypeIn, TypeOut>(UInt32 ioControlCode, TypeIn inStruct) where TypeIn : struct where TypeOut : struct
+        {
+            var inBytes = MarshalEx.StructToBytes<TypeIn>(inStruct);
+            var outBytes = MarshalEx.AllocateBytesForStruct<TypeOut>();
+
+            DeviceIoControl(ioControlCode, inBytes, inBytes.Length, outBytes, outBytes.Length);
+
+            return MarshalEx.BytesToStruct<TypeOut>(outBytes);
         }
 
         public Byte[] DeviceIoControl(UInt32 ioControlCode, UInt32 size)
@@ -115,6 +132,11 @@
             {
                 throw new IOException();
             }
+        }
+
+        public void DeviceIoControl(UInt32 ioControlCode, Byte[] inBuffer, Int32 inBufferSize, Byte[] outBuffer, Int32 outBufferSize)
+        {
+            DeviceIoControl(ioControlCode, inBuffer, Convert.ToUInt32(inBufferSize), outBuffer, Convert.ToUInt32(outBufferSize));
         }
 
         // SetPointer / Read / Write

@@ -29,7 +29,7 @@
             }
         }
 
-        public static T BytesToStruct<T>(ref Byte[] bytes) where T : struct
+        public static T BytesToStruct<T>(Byte[] bytes) where T : struct
         {
             var handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
             
