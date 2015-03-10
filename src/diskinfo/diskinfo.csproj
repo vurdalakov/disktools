@@ -55,6 +55,9 @@
     <Compile Include="..\Common\LogicalDisk.cs">
       <Link>Common\LogicalDisk.cs</Link>
     </Compile>
+    <Compile Include="..\Common\MarshalEx.cs">
+      <Link>Common\MarshalEx.cs</Link>
+    </Compile>
     <Compile Include="..\Common\PhysicalDisk.cs">
       <Link>Common\PhysicalDisk.cs</Link>
     </Compile>

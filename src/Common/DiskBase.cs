@@ -79,6 +79,15 @@
 
         // DeviceIoControl
 
+        public T DeviceIoControl<T>(UInt32 ioControlCode) where T : struct
+        {
+            var outStruct = MarshalEx.AllocateBytesForStruct<T>();
+
+            DeviceIoControl(ioControlCode, new Byte[0], 0, outStruct, Convert.ToUInt32(outStruct.Length));
+
+            return MarshalEx.BytesToStruct<T>(ref outStruct);
+        }
+
         public Byte[] DeviceIoControl(UInt32 ioControlCode, UInt32 size)
         {
             return DeviceIoControl(ioControlCode, new Byte[0], 0, size);

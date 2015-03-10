@@ -41,15 +41,7 @@
         {
             // PARTITION_INFORMATION
 
-            PartitionInformation = new Kernel32.PARTITION_INFORMATION();
-
-            var buffer = DeviceIoControl(Kernel32.IOCTL_DISK_GET_PARTITION_INFO, Convert.ToUInt32(Marshal.SizeOf(PartitionInformation)));
-
-            var pinnedSector = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-
-            PartitionInformation = (Kernel32.PARTITION_INFORMATION)Marshal.PtrToStructure(pinnedSector.AddrOfPinnedObject(), typeof(Kernel32.PARTITION_INFORMATION));
-
-            pinnedSector.Free();
+            PartitionInformation = DeviceIoControl<Kernel32.PARTITION_INFORMATION>(Kernel32.IOCTL_DISK_GET_PARTITION_INFO);
 
             //BytesPerSector = PartitionInformation.BytesPerSector;
         }
