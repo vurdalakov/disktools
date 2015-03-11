@@ -22,7 +22,7 @@
 
                         Console.WriteLine("DISK_GEOMETRY:");
                         Console.WriteLine("Cylinders:\t\t{0:N0}", disk.DiskGeometry.Cylinders);
-                        Console.WriteLine("MediaType:\t\t{0}", disk.DiskGeometry.MediaType);
+                        Console.WriteLine("MediaType:\t\t0x{0:X2} ({1})", disk.DiskGeometry.MediaType, PhysicalDisk.GetMediaTypeString(disk.DiskGeometry.MediaType));
                         Console.WriteLine("TracksPerCylinder:\t{0:N0}", disk.DiskGeometry.TracksPerCylinder);
                         Console.WriteLine("SectorsPerTrack:\t{0:N0}", disk.DiskGeometry.SectorsPerTrack);
                         Console.WriteLine("BytesPerSector:\t\t{0:N0}", disk.DiskGeometry.BytesPerSector);

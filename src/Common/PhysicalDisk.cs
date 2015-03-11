@@ -44,5 +44,21 @@
 
             BytesPerSector = DiskGeometry.BytesPerSector;
         }
+
+        public static String GetMediaTypeString(UInt32 mediaType)
+        {
+            // http://msdn.microsoft.com/en-us/library/windows/desktop/aa365231
+            switch (mediaType)
+            {
+                case 0x00:
+                    return "Unknown";
+                case 0x0B:
+                    return "RemovableMedia";
+                case 0x0C:
+                    return "FixedMedia";
+                default:
+                    return mediaType > 0x19 ? "" : "Floppy";
+            }
+        }
     }
 }
