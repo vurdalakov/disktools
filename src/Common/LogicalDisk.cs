@@ -48,6 +48,7 @@
 
         public static String GetPartitionTypeString(Byte partitionType)
         {
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363990
             switch (partitionType)
             {
                 case 0x00:

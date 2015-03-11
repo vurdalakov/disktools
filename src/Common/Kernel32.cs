@@ -68,6 +68,8 @@
 
         public const UInt32 IOCTL_DISK_GET_DRIVE_GEOMETRY = 0x00070000;
         public const UInt32 IOCTL_DISK_GET_PARTITION_INFO = 0x00074004;
+        public const UInt32 IOCTL_DISK_GET_DRIVE_LAYOUT = 0x0007400C;
+        public const UInt32 IOCTL_DISK_GET_DRIVE_LAYOUT_EX = 0x00070050;
 
         // DISK_GEOMETRY
         // http://msdn.microsoft.com/en-us/library/windows/desktop/aa363972
@@ -96,6 +98,17 @@
             public Boolean RecognizedPartition;
             [MarshalAs(UnmanagedType.I1)]
             public Boolean RewritePartition;
+        }
+
+        // DRIVE_LAYOUT_INFORMATION
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct DRIVE_LAYOUT_INFORMATION
+        {
+            public UInt32 PartitionCount;
+            public UInt32 Signature;
+            //[MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 28)]
+            //public PARTITION_INFORMATION[] PartitionEntry;
         }
 
         // QueryDosDevice

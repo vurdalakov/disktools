@@ -14,13 +14,13 @@
 
                 foreach (var diskNumber in diskNumbers)
                 {
-                    Console.WriteLine("\n--- Physical disk {0}\n", diskNumber);
+                    Console.WriteLine("\n--- Physical disk {0}", diskNumber);
 
                     using (var disk = new PhysicalDisk(diskNumber, true))
                     {
                         disk.ReadDiskInformation();
 
-                        Console.WriteLine("DISK_GEOMETRY:");
+                        Console.WriteLine("\nDISK_GEOMETRY:");
                         Console.WriteLine("Cylinders:\t\t{0:N0}", disk.DiskGeometry.Cylinders);
                         Console.WriteLine("MediaType:\t\t0x{0:X2} ({1})", disk.DiskGeometry.MediaType, PhysicalDisk.GetMediaTypeString(disk.DiskGeometry.MediaType));
                         Console.WriteLine("TracksPerCylinder:\t{0:N0}", disk.DiskGeometry.TracksPerCylinder);
@@ -29,6 +29,10 @@
 
                         var diskSize = disk.DiskGeometry.Cylinders * disk.DiskGeometry.TracksPerCylinder * disk.DiskGeometry.SectorsPerTrack * disk.DiskGeometry.BytesPerSector;
                         Console.WriteLine("\nDisk size:\t\t{0:N0} bytes", diskSize);
+
+                        Console.WriteLine("\nDRIVE_LAYOUT_INFORMATION:");
+                        Console.WriteLine("PartitionCount:\t{0}", disk.DriveLayoutInformation.PartitionCount);
+                        Console.WriteLine("Signature:\t0x{0:X8}", disk.DriveLayoutInformation.Signature);
                     }
                 }
 

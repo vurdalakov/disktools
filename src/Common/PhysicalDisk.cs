@@ -33,6 +33,7 @@
         }
 
         public Kernel32.DISK_GEOMETRY DiskGeometry { get; private set; }
+        public Kernel32.DRIVE_LAYOUT_INFORMATION DriveLayoutInformation { get; private set; }
 
         public PhysicalDisk(UInt32 diskNumber, Boolean readOnly) : base(String.Format("\\\\.\\PhysicalDrive{0}", diskNumber), readOnly)
         {
@@ -40,6 +41,37 @@
 
         public override void ReadDiskInformation()
         {
+            // IOCTL_DISK_GET_DRIVE_LAYOUT
+
+            UInt32 size = (UInt32)Marshal.SizeOf(typeof(Kernel32.DRIVE_LAYOUT_INFORMATION));
+            UInt32 extraSize = (UInt32)Marshal.SizeOf(typeof(Kernel32.PARTITION_INFORMATION)) * 4;
+
+            Byte[] bytes = null;
+            while (true)
+            {
+                size += extraSize;
+
+                try
+                {
+                    bytes = DeviceIoControl(Kernel32.IOCTL_DISK_GET_DRIVE_LAYOUT, size);
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    var comException = ex as COMException;
+                    if ((comException != null) && (0x8007007a == (UInt32)comException.ErrorCode))
+                    {
+                        continue;
+                    }
+
+                    throw;
+                }
+            }
+
+            DriveLayoutInformation = MarshalEx.BytesToStruct<Kernel32.DRIVE_LAYOUT_INFORMATION>(bytes);
+
+            // IOCTL_DISK_GET_DRIVE_GEOMETRY
+
             DiskGeometry = DeviceIoControl<Kernel32.DISK_GEOMETRY>(Kernel32.IOCTL_DISK_GET_DRIVE_GEOMETRY);
 
             BytesPerSector = DiskGeometry.BytesPerSector;
