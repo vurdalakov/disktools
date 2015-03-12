@@ -81,42 +81,71 @@
 
         public TypeOut DeviceIoControl<TypeOut>(UInt32 ioControlCode) where TypeOut : struct
         {
-            var outBytes = MarshalEx.AllocateBytesForStruct<TypeOut>();
+            var outBuffer = MarshalEx.AllocateBytesForStruct<TypeOut>();
 
-            DeviceIoControl(ioControlCode, new Byte[0], 0, outBytes, outBytes.Length);
+            DeviceIoControl(ioControlCode, new Byte[0], 0, outBuffer, outBuffer.Length);
 
-            return MarshalEx.BytesToStruct<TypeOut>(outBytes);
+            return MarshalEx.BytesToStruct<TypeOut>(outBuffer);
         }
 
         public void DeviceIoControl<TypeIn>(UInt32 ioControlCode, TypeIn inStruct) where TypeIn : struct
         {
-            var inBytes = MarshalEx.StructToBytes<TypeIn>(inStruct);
+            var inBuffer = MarshalEx.StructToBytes<TypeIn>(inStruct);
 
-            DeviceIoControl(ioControlCode, inBytes, inBytes.Length, new Byte[0], 0);
+            DeviceIoControl(ioControlCode, inBuffer, inBuffer.Length, new Byte[0], 0);
         }
 
         public TypeOut DeviceIoControl<TypeIn, TypeOut>(UInt32 ioControlCode, TypeIn inStruct) where TypeIn : struct where TypeOut : struct
         {
-            var inBytes = MarshalEx.StructToBytes<TypeIn>(inStruct);
-            var outBytes = MarshalEx.AllocateBytesForStruct<TypeOut>();
+            var inBuffer = MarshalEx.StructToBytes<TypeIn>(inStruct);
+            var outBuffer = MarshalEx.AllocateBytesForStruct<TypeOut>();
 
-            DeviceIoControl(ioControlCode, inBytes, inBytes.Length, outBytes, outBytes.Length);
+            DeviceIoControl(ioControlCode, inBuffer, inBuffer.Length, outBuffer, outBuffer.Length);
 
-            return MarshalEx.BytesToStruct<TypeOut>(outBytes);
+            return MarshalEx.BytesToStruct<TypeOut>(outBuffer);
         }
 
-        public Byte[] DeviceIoControl(UInt32 ioControlCode, UInt32 size)
+        public Byte[] DeviceIoControl(UInt32 ioControlCode, UInt32 outBufferSize)
         {
-            return DeviceIoControl(ioControlCode, new Byte[0], 0, size);
+            return DeviceIoControl(ioControlCode, new Byte[0], 0, outBufferSize);
         }
 
-        public Byte[] DeviceIoControl(UInt32 ioControlCode, Byte[] inBuffer, UInt32 inBufferSize, UInt32 size)
+        public Byte[] DeviceIoControl(UInt32 ioControlCode, Byte[] inBuffer, UInt32 inBufferSize, UInt32 outBufferSize)
         {
-            Byte[] buffer = new Byte[size];
+            Byte[] buffer = new Byte[outBufferSize];
 
-            DeviceIoControl(ioControlCode, inBuffer, inBufferSize, buffer, size);
+            DeviceIoControl(ioControlCode, inBuffer, inBufferSize, buffer, outBufferSize);
 
             return buffer;
+        }
+
+        public Byte[] DeviceIoControl(UInt32 ioControlCode, UInt32 outBufferSizeInitial, UInt32 outBufferSizeDelta)
+        {
+            return DeviceIoControl(ioControlCode, null, 0, outBufferSizeInitial, outBufferSizeDelta);
+        }
+
+        public Byte[] DeviceIoControl(UInt32 ioControlCode, Byte[] inBuffer, UInt32 inBufferSize, UInt32 outBufferSizeInitial, UInt32 outBufferSizeDelta)
+        {
+            UInt32 outBufferSize = outBufferSizeInitial;
+
+            while (true)
+            {
+                try
+                {
+                    return DeviceIoControl(ioControlCode, inBuffer, inBufferSize, outBufferSize);
+                }
+                catch (Exception ex)
+                {
+                    var comException = ex as COMException;
+                    if ((comException != null) && (0x8007007A == (UInt32)comException.ErrorCode)) // ERROR_INSUFFICIENT_BUFFER
+                    {
+                        outBufferSize += outBufferSizeDelta;
+                        continue;
+                    }
+
+                    throw;
+                }
+            }
         }
 
         public void DeviceIoControl(UInt32 ioControlCode, Byte[] inBuffer, UInt32 inBufferSize, Byte[] outBuffer, UInt32 outBufferSize)

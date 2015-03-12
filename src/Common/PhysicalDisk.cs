@@ -50,37 +50,14 @@
 
             // IOCTL_DISK_GET_DRIVE_LAYOUT
 
-            var size = Marshal.SizeOf(typeof(Kernel32.DRIVE_LAYOUT_INFORMATION));
-            var delta = Marshal.SizeOf(typeof(Kernel32.PARTITION_INFORMATION)) * 4;
+            var delta = Marshal.SizeOf(typeof(Kernel32.PARTITION_INFORMATION));
 
-            Byte[] bytes = null; // TODO: var bytes = DeviceIoControl(Kernel32.IOCTL_DISK_GET_DRIVE_LAYOUT, initialSize, deltaSize);
-            while (true)
-            {
-                size += delta;
-
-                try
-                {
-                    bytes = DeviceIoControl(Kernel32.IOCTL_DISK_GET_DRIVE_LAYOUT, (UInt32)size);
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    var comException = ex as COMException;
-                    if ((comException != null) && (0x8007007a == (UInt32)comException.ErrorCode))
-                    {
-                        continue;
-                    }
-
-                    throw;
-                }
-            }
-
+            var bytes = DeviceIoControl(Kernel32.IOCTL_DISK_GET_DRIVE_LAYOUT, (UInt32)Marshal.SizeOf(typeof(Kernel32.DRIVE_LAYOUT_INFORMATION)), (UInt32)delta * 4);
             DriveLayoutInformation = MarshalEx.BytesToStruct<Kernel32.DRIVE_LAYOUT_INFORMATION>(bytes);
 
             PartitionInformation = new Kernel32.PARTITION_INFORMATION[DriveLayoutInformation.PartitionCount];
 
             var offset = Marshal.SizeOf(typeof(Kernel32.DRIVE_LAYOUT_INFORMATION));
-            delta = Marshal.SizeOf(typeof(Kernel32.PARTITION_INFORMATION));
 
             for (var i = 0; i < DriveLayoutInformation.PartitionCount; i++)
             {
