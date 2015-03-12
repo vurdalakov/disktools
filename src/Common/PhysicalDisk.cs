@@ -52,7 +52,7 @@
 
             var delta = Marshal.SizeOf(typeof(Kernel32.PARTITION_INFORMATION));
 
-            var bytes = DeviceIoControl(Kernel32.IOCTL_DISK_GET_DRIVE_LAYOUT, (UInt32)Marshal.SizeOf(typeof(Kernel32.DRIVE_LAYOUT_INFORMATION)), (UInt32)delta * 4);
+            var bytes = DeviceIoControl(Kernel32.IOCTL_DISK_GET_DRIVE_LAYOUT, Marshal.SizeOf(typeof(Kernel32.DRIVE_LAYOUT_INFORMATION)), delta * 4);
             DriveLayoutInformation = MarshalEx.BytesToStruct<Kernel32.DRIVE_LAYOUT_INFORMATION>(bytes);
 
             PartitionInformation = new Kernel32.PARTITION_INFORMATION[DriveLayoutInformation.PartitionCount];
