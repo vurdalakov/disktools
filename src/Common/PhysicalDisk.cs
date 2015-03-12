@@ -34,6 +34,7 @@
 
         public Kernel32.DISK_GEOMETRY DiskGeometry { get; private set; }
         public Kernel32.DRIVE_LAYOUT_INFORMATION DriveLayoutInformation { get; private set; }
+        public Kernel32.PARTITION_INFORMATION[] PartitionInformation { get; private set; }
 
         public PhysicalDisk(UInt32 diskNumber, Boolean readOnly) : base(String.Format("\\\\.\\PhysicalDrive{0}", diskNumber), readOnly)
         {
@@ -41,19 +42,25 @@
 
         public override void ReadDiskInformation()
         {
+            // IOCTL_DISK_GET_DRIVE_GEOMETRY
+
+            DiskGeometry = DeviceIoControl<Kernel32.DISK_GEOMETRY>(Kernel32.IOCTL_DISK_GET_DRIVE_GEOMETRY);
+
+            BytesPerSector = DiskGeometry.BytesPerSector;
+
             // IOCTL_DISK_GET_DRIVE_LAYOUT
 
-            UInt32 size = (UInt32)Marshal.SizeOf(typeof(Kernel32.DRIVE_LAYOUT_INFORMATION));
-            UInt32 extraSize = (UInt32)Marshal.SizeOf(typeof(Kernel32.PARTITION_INFORMATION)) * 4;
+            var size = Marshal.SizeOf(typeof(Kernel32.DRIVE_LAYOUT_INFORMATION));
+            var delta = Marshal.SizeOf(typeof(Kernel32.PARTITION_INFORMATION)) * 4;
 
-            Byte[] bytes = null;
+            Byte[] bytes = null; // TODO: var bytes = DeviceIoControl(Kernel32.IOCTL_DISK_GET_DRIVE_LAYOUT, initialSize, deltaSize);
             while (true)
             {
-                size += extraSize;
+                size += delta;
 
                 try
                 {
-                    bytes = DeviceIoControl(Kernel32.IOCTL_DISK_GET_DRIVE_LAYOUT, size);
+                    bytes = DeviceIoControl(Kernel32.IOCTL_DISK_GET_DRIVE_LAYOUT, (UInt32)size);
                     break;
                 }
                 catch (Exception ex)
@@ -70,11 +77,17 @@
 
             DriveLayoutInformation = MarshalEx.BytesToStruct<Kernel32.DRIVE_LAYOUT_INFORMATION>(bytes);
 
-            // IOCTL_DISK_GET_DRIVE_GEOMETRY
+            PartitionInformation = new Kernel32.PARTITION_INFORMATION[DriveLayoutInformation.PartitionCount];
 
-            DiskGeometry = DeviceIoControl<Kernel32.DISK_GEOMETRY>(Kernel32.IOCTL_DISK_GET_DRIVE_GEOMETRY);
+            var offset = Marshal.SizeOf(typeof(Kernel32.DRIVE_LAYOUT_INFORMATION));
+            delta = Marshal.SizeOf(typeof(Kernel32.PARTITION_INFORMATION));
 
-            BytesPerSector = DiskGeometry.BytesPerSector;
+            for (var i = 0; i < DriveLayoutInformation.PartitionCount; i++)
+            {
+                PartitionInformation[i] = MarshalEx.BytesToStruct<Kernel32.PARTITION_INFORMATION>(bytes, offset, delta);
+
+                offset += delta;
+            }
         }
 
         public static String GetMediaTypeString(UInt32 mediaType)

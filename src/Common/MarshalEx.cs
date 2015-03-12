@@ -43,5 +43,13 @@
                 handle.Free();
             }
         }
+
+        public static T BytesToStruct<T>(Byte[] bytes, Int32 startIndex, Int32 length) where T : struct
+        {
+            var partial = new Byte[length];
+            Array.Copy(bytes, startIndex, partial, 0, length);
+
+            return BytesToStruct<T>(partial);
+        }
     }
 }
