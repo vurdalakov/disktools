@@ -8,7 +8,9 @@
     {
         public String DeviceName { get; private set; }
 
-        // TODO: default constructor?
+        public DiskBase()
+        {
+        }
 
         public DiskBase(String deviceName, Boolean readOnly)
         {

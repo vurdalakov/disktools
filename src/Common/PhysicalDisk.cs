@@ -27,15 +27,24 @@
             return deviceNames.ToArray();
         }
 
+        public static String FormatDeviceName(UInt32 diskNumber)
+        {
+            return String.Format("PhysicalDrive{0}", diskNumber);
+        }
+
         public Kernel32.DISK_GEOMETRY DiskGeometry { get; private set; }
         public Kernel32.DRIVE_LAYOUT_INFORMATION DriveLayoutInformation { get; private set; }
         public Kernel32.PARTITION_INFORMATION[] PartitionInformation { get; private set; }
+
+        public PhysicalDisk()
+        {
+        }
 
         public PhysicalDisk(String deviceName, Boolean readOnly) : base(deviceName, readOnly)
         {
         }
 
-        public PhysicalDisk(UInt32 diskNumber, Boolean readOnly) : base(String.Format("PhysicalDrive{0}", diskNumber), readOnly)
+        public PhysicalDisk(UInt32 diskNumber, Boolean readOnly) : base(FormatDeviceName(diskNumber), readOnly)
         {
         }
 
