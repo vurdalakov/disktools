@@ -6,34 +6,32 @@
 
     public class LogicalDisk : DiskBase
     {
-        public static Char[] GetDisks()
+        public static String[] GetDeviceNames()
         {
             var devices = VolumeManagement.QueryDosDevice(null);
 
-            var disks = new List<Char>();
+            var deviceNames = new List<String>();
 
             foreach (var device in devices)
             {
                 if ((2 == device.Length) && (':' == device[1]))
                 {
-                    var disk = Char.ToUpper(device[0]);
-
-                    if ((disk >= 'A') && (disk <= 'Z'))
-                    {
-                        disks.Add(disk);
-                    }
+                    deviceNames.Add(device.ToUpper());
                 }
             }
 
-            disks.Sort();
+            deviceNames.Sort();
 
-            return disks.ToArray();
+            return deviceNames.ToArray();
         }
 
         public Kernel32.PARTITION_INFORMATION PartitionInformation { get; private set; }
 
-        public LogicalDisk(char volume, Boolean readOnly)
-            : base(String.Format("\\\\.\\{0}:", volume), readOnly)
+        public LogicalDisk(String deviceName, Boolean readOnly) : base(deviceName, readOnly)
+        {
+        }
+
+        public LogicalDisk(char volume, Boolean readOnly) : base(String.Format("{0}:", volume), readOnly)
         {
         }
 

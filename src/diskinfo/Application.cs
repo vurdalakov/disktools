@@ -8,9 +8,40 @@
         {
             try
             {
+                if ((_commandLineParser.FileNames.Length != 1) && !_commandLineParser.IsOptionSet("p") && !_commandLineParser.IsOptionSet("l"))
+                {
+                    Help();
+                }
+
+                if (_commandLineParser.IsOptionSet("p"))
+                {
+                    if (_commandLineParser.OptionHasValue("p"))
+                    {
+                        return 0;
+                    }
+                    else
+                    {
+                        PrintArray(PhysicalDisk.GetDeviceNames());
+                        return 0;
+                    }
+                }
+
+                if (_commandLineParser.IsOptionSet("l"))
+                {
+                    if (_commandLineParser.OptionHasValue("l"))
+                    {
+                        return 0;
+                    }
+                    else
+                    {
+                        PrintArray(LogicalDisk.GetDeviceNames());
+                        return 0;
+                    }
+                }
+
                 Console.WriteLine("=== Physical disks");
 
-                var diskNumbers = PhysicalDisk.GetDisks();
+                var diskNumbers = PhysicalDisk.GetDeviceNames();
 
                 foreach (var diskNumber in diskNumbers)
                 {
@@ -43,7 +74,7 @@
 
                 Console.WriteLine("\n=== Logical disks");
 
-                var diskChars = LogicalDisk.GetDisks();
+                var diskChars = LogicalDisk.GetDeviceNames();
 
                 foreach (var diskChar in diskChars)
                 {
@@ -68,6 +99,21 @@
 
         protected override void Help()
         {
+            Console.WriteLine("DiskRead {0} | https://github.com/vurdalakov/disktools\n", ApplicationVersion);
+            Console.WriteLine("Reads sectors from physical or logical disk to a file.\n");
+            Console.WriteLine("Usage:\n\tdiskinfo <device name> | -l | -l:C | -p | -p:N [-silent]\n");
+            Console.WriteLine("Options:");
+            Console.WriteLine("\t-l - prints list of logical disks");
+            Console.WriteLine("\t-p - prints list of physical disks");
+            Environment.Exit(-1);
+        }
+
+        private void PrintArray(Object[] array)
+        {
+            foreach (var item in array)
+            {
+                Console.WriteLine(item);
+            }
         }
 
         private void PrintPartitionInformation(Kernel32.PARTITION_INFORMATION partitionInformation)

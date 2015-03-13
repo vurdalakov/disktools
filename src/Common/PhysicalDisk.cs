@@ -6,11 +6,11 @@
 
     public class PhysicalDisk : DiskBase
     {
-        public static UInt32[] GetDisks()
+        public static String[] GetDeviceNames()
         {
             var devices = VolumeManagement.QueryDosDevice(null);
 
-            var disks = new List<UInt32>();
+            var deviceNames = new List<String>();
 
             foreach (var device in devices)
             {
@@ -18,25 +18,24 @@
 
                 if (device.StartsWith(prefix, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    try
-                    {
-                        var disk = UInt32.Parse(device.Substring(prefix.Length));
-                        disks.Add(disk);
-                    }
-                    catch { }
+                    deviceNames.Add(device);
                 }
             }
 
-            disks.Sort();
+            deviceNames.Sort();
 
-            return disks.ToArray();
+            return deviceNames.ToArray();
         }
 
         public Kernel32.DISK_GEOMETRY DiskGeometry { get; private set; }
         public Kernel32.DRIVE_LAYOUT_INFORMATION DriveLayoutInformation { get; private set; }
         public Kernel32.PARTITION_INFORMATION[] PartitionInformation { get; private set; }
 
-        public PhysicalDisk(UInt32 diskNumber, Boolean readOnly) : base(String.Format("\\\\.\\PhysicalDrive{0}", diskNumber), readOnly)
+        public PhysicalDisk(String deviceName, Boolean readOnly) : base(deviceName, readOnly)
+        {
+        }
+
+        public PhysicalDisk(UInt32 diskNumber, Boolean readOnly) : base(String.Format("PhysicalDrive{0}", diskNumber), readOnly)
         {
         }
 

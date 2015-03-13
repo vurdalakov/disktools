@@ -26,6 +26,11 @@
                 throw new ArgumentNullException("path");
             }
 
+            if (!deviceName.StartsWith(@"\\.\"))
+            {
+                deviceName = @"\\.\" + deviceName;
+            }
+
             Close();
 
             UInt32 desiredAccess = Kernel32.GENERIC_READ | (readOnly ? 0 : Kernel32.GENERIC_WRITE);
