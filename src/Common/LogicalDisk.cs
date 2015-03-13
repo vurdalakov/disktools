@@ -25,13 +25,22 @@
             return deviceNames.ToArray();
         }
 
+        public static String FormatDeviceName(char volume)
+        {
+            return String.Format("{0}:", volume);
+        }
+
         public Kernel32.PARTITION_INFORMATION PartitionInformation { get; private set; }
+
+        public LogicalDisk()
+        {
+        }
 
         public LogicalDisk(String deviceName, Boolean readOnly) : base(deviceName, readOnly)
         {
         }
 
-        public LogicalDisk(char volume, Boolean readOnly) : base(String.Format("{0}:", volume), readOnly)
+        public LogicalDisk(char volume, Boolean readOnly) : base(FormatDeviceName(volume), readOnly)
         {
         }
 

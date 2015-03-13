@@ -29,42 +29,35 @@
                         {
                             PrintPhysicalDiskInformation(physicalDisk);
                         }
-                        
-                        return 0;
                     }
                     else
                     {
                         PrintArray(PhysicalDisk.GetDeviceNames());
-                        return 0;
                     }
                 }
-
-                if (_commandLineParser.IsOptionSet("l"))
+                else if (_commandLineParser.IsOptionSet("l"))
                 {
                     if (_commandLineParser.OptionHasValue("l"))
                     {
-                        return 0;
+                        var deviceName = _commandLineParser.GetOptionString("l");
+
+                        if (1 == deviceName.Length)
+                        {
+                            var volume = Char.ToUpper(deviceName[0]);
+                            if ((volume >= 'A') && (volume <= 'Z'))
+                            {
+                                deviceName = LogicalDisk.FormatDeviceName(volume);
+                            }
+                        }
+
+                        using (var logicalDisk = new LogicalDisk(deviceName, true))
+                        {
+                            PrintLogicalDiskInformation(logicalDisk);
+                        }
                     }
                     else
                     {
                         PrintArray(LogicalDisk.GetDeviceNames());
-                        return 0;
-                    }
-                }
-
-                Console.WriteLine("\n=== Logical disks");
-
-                var diskChars = LogicalDisk.GetDeviceNames();
-
-                foreach (var diskChar in diskChars)
-                {
-                    Console.WriteLine("\n--- Logical disk {0}:", diskChar);
-
-                    using (var disk = new LogicalDisk(diskChar, true))
-                    {
-                        disk.ReadDiskInformation();
-
-                        PrintPartitionInformation(disk.PartitionInformation);
                     }
                 }
 
@@ -84,6 +77,7 @@
             Console.WriteLine("Usage:\n\tdiskinfo <device name> | -l | -l:C | -p | -p:N [-silent]\n");
             Console.WriteLine("Options:");
             Console.WriteLine("\t-l - prints list of logical disks");
+            Console.WriteLine("\t-l:C - prints information about logical disk C (A, B, C, ...)");
             Console.WriteLine("\t-p - prints list of physical disks");
             Console.WriteLine("\t-p:N - prints information about physical disk N (0, 1, ...)");
             Environment.Exit(-1);
@@ -121,6 +115,15 @@
             {
                 PrintPartitionInformation(physicalDisk.PartitionInformation[i]);
             }
+        }
+
+        private void PrintLogicalDiskInformation(LogicalDisk logicalDisk)
+        {
+            Console.WriteLine("Logical disk {0}", logicalDisk.DeviceName);
+
+            logicalDisk.ReadDiskInformation();
+
+            PrintPartitionInformation(logicalDisk.PartitionInformation);
         }
 
         private void PrintPartitionInformation(Kernel32.PARTITION_INFORMATION partitionInformation)
