@@ -8,12 +8,20 @@
         {
             try
             {
-                if ((_commandLineParser.FileNames.Length != 1) && !_commandLineParser.IsOptionSet("p") && !_commandLineParser.IsOptionSet("l"))
+                if (1 == _commandLineParser.FileNames.Length)
                 {
-                    Help();
-                }
+                    var deviceName = _commandLineParser.FileNames[0];
 
-                if (_commandLineParser.IsOptionSet("p"))
+                    if (deviceName.EndsWith(":"))
+                    {
+                        PrintLogicalDiskInformation(deviceName);
+                    }
+                    else
+                    {
+                        PrintPhysicalDiskInformation(deviceName);
+                    }
+                }
+                else if (_commandLineParser.IsOptionSet("p"))
                 {
                     if (_commandLineParser.OptionHasValue("p"))
                     {
@@ -25,10 +33,7 @@
                             deviceName = PhysicalDisk.FormatDeviceName(diskNumber);
                         }
 
-                        using (var physicalDisk = new PhysicalDisk(deviceName, true))
-                        {
-                            PrintPhysicalDiskInformation(physicalDisk);
-                        }
+                        PrintPhysicalDiskInformation(deviceName);
                     }
                     else
                     {
@@ -50,15 +55,16 @@
                             }
                         }
 
-                        using (var logicalDisk = new LogicalDisk(deviceName, true))
-                        {
-                            PrintLogicalDiskInformation(logicalDisk);
-                        }
+                        PrintLogicalDiskInformation(deviceName);
                     }
                     else
                     {
                         PrintArray(LogicalDisk.GetDeviceNames());
                     }
+                }
+                else
+                {
+                    Help();
                 }
 
                 return 0;
@@ -80,6 +86,7 @@
             Console.WriteLine("\t-l:C - prints information about logical disk C (A, B, C, ...)");
             Console.WriteLine("\t-p - prints list of physical disks");
             Console.WriteLine("\t-p:N - prints information about physical disk N (0, 1, ...)");
+            Console.WriteLine("\t-silent - no error messsages are shown; check the exit code\n");
             Environment.Exit(-1);
         }
 
@@ -91,39 +98,45 @@
             }
         }
 
-        private void PrintPhysicalDiskInformation(PhysicalDisk physicalDisk)
+        private void PrintPhysicalDiskInformation(String deviceName)
         {
-            Console.WriteLine("Physical disk {0}", physicalDisk.DeviceName);
-
-            physicalDisk.ReadDiskInformation();
-
-            Console.WriteLine("\nDISK_GEOMETRY:");
-            Console.WriteLine("Cylinders:\t\t{0:N0}", physicalDisk.DiskGeometry.Cylinders);
-            Console.WriteLine("MediaType:\t\t0x{0:X2} ({1})", physicalDisk.DiskGeometry.MediaType, PhysicalDisk.GetMediaTypeString(physicalDisk.DiskGeometry.MediaType));
-            Console.WriteLine("TracksPerCylinder:\t{0:N0}", physicalDisk.DiskGeometry.TracksPerCylinder);
-            Console.WriteLine("SectorsPerTrack:\t{0:N0}", physicalDisk.DiskGeometry.SectorsPerTrack);
-            Console.WriteLine("BytesPerSector:\t\t{0:N0}", physicalDisk.DiskGeometry.BytesPerSector);
-
-            var diskSize = physicalDisk.DiskGeometry.Cylinders * physicalDisk.DiskGeometry.TracksPerCylinder * physicalDisk.DiskGeometry.SectorsPerTrack * physicalDisk.DiskGeometry.BytesPerSector;
-            Console.WriteLine("\nDisk size:\t\t{0:N0} bytes", diskSize);
-
-            Console.WriteLine("\nDRIVE_LAYOUT_INFORMATION:");
-            Console.WriteLine("PartitionCount:\t{0}", physicalDisk.DriveLayoutInformation.PartitionCount);
-            Console.WriteLine("Signature:\t0x{0:X8}", physicalDisk.DriveLayoutInformation.Signature);
-
-            for (var i = 0; i < physicalDisk.PartitionInformation.Length; i++)
+            using (var physicalDisk = new PhysicalDisk(deviceName, true))
             {
-                PrintPartitionInformation(physicalDisk.PartitionInformation[i]);
+                Console.WriteLine("Physical disk {0}", physicalDisk.DeviceName);
+
+                physicalDisk.ReadDiskInformation();
+
+                Console.WriteLine("\nDISK_GEOMETRY:");
+                Console.WriteLine("Cylinders:\t\t{0:N0}", physicalDisk.DiskGeometry.Cylinders);
+                Console.WriteLine("MediaType:\t\t0x{0:X2} ({1})", physicalDisk.DiskGeometry.MediaType, PhysicalDisk.GetMediaTypeString(physicalDisk.DiskGeometry.MediaType));
+                Console.WriteLine("TracksPerCylinder:\t{0:N0}", physicalDisk.DiskGeometry.TracksPerCylinder);
+                Console.WriteLine("SectorsPerTrack:\t{0:N0}", physicalDisk.DiskGeometry.SectorsPerTrack);
+                Console.WriteLine("BytesPerSector:\t\t{0:N0}", physicalDisk.DiskGeometry.BytesPerSector);
+
+                var diskSize = physicalDisk.DiskGeometry.Cylinders * physicalDisk.DiskGeometry.TracksPerCylinder * physicalDisk.DiskGeometry.SectorsPerTrack * physicalDisk.DiskGeometry.BytesPerSector;
+                Console.WriteLine("\nDisk size:\t\t{0:N0} bytes", diskSize);
+
+                Console.WriteLine("\nDRIVE_LAYOUT_INFORMATION:");
+                Console.WriteLine("PartitionCount:\t{0}", physicalDisk.DriveLayoutInformation.PartitionCount);
+                Console.WriteLine("Signature:\t0x{0:X8}", physicalDisk.DriveLayoutInformation.Signature);
+
+                for (var i = 0; i < physicalDisk.PartitionInformation.Length; i++)
+                {
+                    PrintPartitionInformation(physicalDisk.PartitionInformation[i]);
+                }
             }
         }
 
-        private void PrintLogicalDiskInformation(LogicalDisk logicalDisk)
+        private void PrintLogicalDiskInformation(String deviceName)
         {
-            Console.WriteLine("Logical disk {0}", logicalDisk.DeviceName);
+            using (var logicalDisk = new LogicalDisk(deviceName, true))
+            {
+                Console.WriteLine("Logical disk {0}", logicalDisk.DeviceName);
 
-            logicalDisk.ReadDiskInformation();
+                logicalDisk.ReadDiskInformation();
 
-            PrintPartitionInformation(logicalDisk.PartitionInformation);
+                PrintPartitionInformation(logicalDisk.PartitionInformation);
+            }
         }
 
         private void PrintPartitionInformation(Kernel32.PARTITION_INFORMATION partitionInformation)
