@@ -7,6 +7,7 @@
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct BiosParameterBlock
     {
+        // DOS 2.0
         public UInt16 BytesPerSector;
         public Byte SectorsPerCluster;
         public UInt16 ReservedSectors;
@@ -15,10 +16,12 @@
         public UInt16 TotalSectors16;
         public Byte MediaDescriptor;
         public UInt16 SectorsPerFat;
+        // DOS 3.31
         public UInt16 SectorsPerTrack;
         public UInt16 NumberOfHeads;
         public UInt32 HiddenSectors;
         public UInt32 TotalSectors32;
+        // NTFS
         public Byte PhysicalDriveNumber;
         public Byte Flags;
         public Byte ExtendedBootSignature;
@@ -28,7 +31,8 @@
         public UInt64 MftMirrorFirstClusterNumber;
         public UInt32 MftRecordSize;
         public UInt32 IndexBlockSize;
-        public UInt64 VolumeSerialNumber;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
+        public Byte[] VolumeSerialNumber;
         public UInt32 Checksum;
     }
 
@@ -38,20 +42,10 @@
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
         public Byte[] JumpInstruction;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-        public Char[] OemId;
+        public Byte[] OemId;
         public BiosParameterBlock BiosParameterBlock;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 426)]
         public Byte[] BootstrapCode;
         public UInt16 EndOfSectorMarker;
-
-        public String OemIdString
-        {
-            get
-            {
-                var stringBuilder = new StringBuilder(OemId.Length);
-                stringBuilder.Append(OemId);
-                return stringBuilder.ToString().Trim();
-            }
-        }
     }
 }

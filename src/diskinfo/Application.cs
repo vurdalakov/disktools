@@ -1,6 +1,7 @@
 ﻿namespace Vurdalakov.DiskTools
 {
     using System;
+    using System.Text;
 
     public class Application : DosToolsApplication
     {
@@ -156,11 +157,44 @@
         private void PrintVolumeBootRecord(VolumeBootRecord volumeBootRecord)
         {
             Console.WriteLine("\nVolume Boot Record (VBR):");
-            Console.WriteLine("OemId:\t\t\t{0}", volumeBootRecord.OemIdString);
+            Console.WriteLine("JumpInstruction:\t{0}", FormatBytes(volumeBootRecord.JumpInstruction));
+            Console.WriteLine("OemId:\t\t\t{0}", FormatBytes(volumeBootRecord.OemId));
+            Console.WriteLine("OemId:\t\t\t{0}", Encoding.ASCII.GetString(volumeBootRecord.OemId).TrimEnd());
             Console.WriteLine("BytesPerSector:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.BytesPerSector);
             Console.WriteLine("SectorsPerCluster:\t{0:N0}", volumeBootRecord.BiosParameterBlock.SectorsPerCluster);
             Console.WriteLine("ReservedSectors:\t{0:N0}", volumeBootRecord.BiosParameterBlock.ReservedSectors);
+            Console.WriteLine("NumberOfFats:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.NumberOfFats);
+            Console.WriteLine("RootDirectoryEntries:\t{0:N0}", volumeBootRecord.BiosParameterBlock.RootDirectoryEntries);
+            Console.WriteLine("TotalSectors16:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.TotalSectors16);
+            Console.WriteLine("MediaDescriptor:\t{0:N0}", volumeBootRecord.BiosParameterBlock.MediaDescriptor);
+            Console.WriteLine("SectorsPerFat:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.SectorsPerFat);
+            Console.WriteLine("SectorsPerTrack:\t{0:N0}", volumeBootRecord.BiosParameterBlock.SectorsPerTrack);
+            Console.WriteLine("NumberOfHeads:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.NumberOfHeads);
+            Console.WriteLine("HiddenSectors:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.HiddenSectors);
+            Console.WriteLine("TotalSectors32:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.TotalSectors32);
+            Console.WriteLine("PhysicalDriveNumber:\t{0:N0}", volumeBootRecord.BiosParameterBlock.PhysicalDriveNumber);
+            Console.WriteLine("Flags:\t\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.Flags);
+            Console.WriteLine("ExtendedBootSignature:\t{0:N0}", volumeBootRecord.BiosParameterBlock.ExtendedBootSignature);
+            Console.WriteLine("Reserved:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.Reserved);
+            Console.WriteLine("TotalSectors64:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.TotalSectors64);
+            Console.WriteLine("MftFirstClusterNumber:\t{0:N0}", volumeBootRecord.BiosParameterBlock.MftFirstClusterNumber);
+            Console.WriteLine("MftMirrorFirstClusterNumber:\t{0:N0}", volumeBootRecord.BiosParameterBlock.MftMirrorFirstClusterNumber);
+            Console.WriteLine("MftRecordSize:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.MftRecordSize);
+            Console.WriteLine("IndexBlockSize:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.IndexBlockSize);
+            Console.WriteLine("VolumeSerialNumber:\t{0}", FormatBytes(volumeBootRecord.BiosParameterBlock.VolumeSerialNumber));
+            Console.WriteLine("Checksum:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.Checksum);
             Console.WriteLine("EndOfSectorMarker:\t{0:X4}", volumeBootRecord.EndOfSectorMarker);
+        }
+
+        private String FormatBytes(Byte[] bytes)
+        {
+            var stringBuilder = new StringBuilder(bytes.Length * 3);
+            foreach (var b in bytes)
+            {
+                stringBuilder.AppendFormat("{0:X2} ", b);
+            }
+
+            return stringBuilder.ToString().TrimEnd();
         }
     }
 }
