@@ -136,6 +136,7 @@
                 logicalDisk.ReadDiskInformation();
 
                 PrintPartitionInformation(logicalDisk.PartitionInformation);
+                PrintVolumeBootRecord(logicalDisk.VolumeBootRecord);
             }
         }
 
@@ -150,6 +151,16 @@
             Console.WriteLine("BootIndicator:\t\t{0}", partitionInformation.BootIndicator);
             Console.WriteLine("RecognizedPartition:\t{0}", partitionInformation.RecognizedPartition);
             Console.WriteLine("RewritePartition:\t{0}", partitionInformation.RewritePartition);
+        }
+
+        private void PrintVolumeBootRecord(VolumeBootRecord volumeBootRecord)
+        {
+            Console.WriteLine("\nVolume Boot Record (VBR):");
+            Console.WriteLine("OemId:\t\t\t{0}", volumeBootRecord.OemIdString);
+            Console.WriteLine("BytesPerSector:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.BytesPerSector);
+            Console.WriteLine("SectorsPerCluster:\t{0:N0}", volumeBootRecord.BiosParameterBlock.SectorsPerCluster);
+            Console.WriteLine("ReservedSectors:\t{0:N0}", volumeBootRecord.BiosParameterBlock.ReservedSectors);
+            Console.WriteLine("EndOfSectorMarker:\t{0:X4}", volumeBootRecord.EndOfSectorMarker);
         }
     }
 }

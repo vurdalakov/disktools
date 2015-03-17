@@ -61,6 +61,9 @@
     <Compile Include="..\Common\PhysicalDisk.cs">
       <Link>Common\PhysicalDisk.cs</Link>
     </Compile>
+    <Compile Include="..\Common\VolumeBootRecord.cs">
+      <Link>Common\VolumeBootRecord.cs</Link>
+    </Compile>
     <Compile Include="..\Common\VolumeManagement.cs">
       <Link>Common\VolumeManagement.cs</Link>
     </Compile>

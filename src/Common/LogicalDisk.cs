@@ -32,6 +32,8 @@
 
         public Kernel32.PARTITION_INFORMATION PartitionInformation { get; private set; }
 
+        public VolumeBootRecord VolumeBootRecord { get; private set; }
+
         public LogicalDisk()
         {
         }
@@ -50,7 +52,10 @@
 
             PartitionInformation = DeviceIoControl<Kernel32.PARTITION_INFORMATION>(Kernel32.IOCTL_DISK_GET_PARTITION_INFO);
 
-            //BytesPerSector = PartitionInformation.BytesPerSector;
+            Byte[] sector = Read(0, 512);
+            VolumeBootRecord = MarshalEx.BytesToStruct<VolumeBootRecord>(sector);
+
+            BytesPerSector = VolumeBootRecord.BiosParameterBlock.BytesPerSector;
         }
 
         public static String GetPartitionTypeString(Byte partitionType)
