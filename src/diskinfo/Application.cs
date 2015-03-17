@@ -182,6 +182,7 @@
             Console.WriteLine("MftRecordSize:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.MftRecordSize);
             Console.WriteLine("IndexBlockSize:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.IndexBlockSize);
             Console.WriteLine("VolumeSerialNumber:\t{0}", FormatBytes(volumeBootRecord.BiosParameterBlock.VolumeSerialNumber));
+            Console.WriteLine("VolumeSerialNumber:\t{0:X4}-{1:X4}", BitConverter.ToInt16(volumeBootRecord.BiosParameterBlock.VolumeSerialNumber, 2), BitConverter.ToInt16(volumeBootRecord.BiosParameterBlock.VolumeSerialNumber, 0));
             Console.WriteLine("Checksum:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.Checksum);
             Console.WriteLine("EndOfSectorMarker:\t{0:X4}", volumeBootRecord.EndOfSectorMarker);
         }
