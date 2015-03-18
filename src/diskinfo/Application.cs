@@ -158,15 +158,14 @@
         {
             Console.WriteLine("\nVolume Boot Record (VBR):");
             Console.WriteLine("JumpInstruction:\t{0}", FormatBytes(volumeBootRecord.JumpInstruction));
-            Console.WriteLine("OemId:\t\t\t{0}", FormatBytes(volumeBootRecord.OemId));
-            Console.WriteLine("OemId:\t\t\t{0}", volumeBootRecord.GetOemId());
+            Console.WriteLine("OemId:\t\t\t{0} ({1})", FormatBytes(volumeBootRecord.OemId), volumeBootRecord.GetOemId());
             Console.WriteLine("BytesPerSector:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.BytesPerSector);
             Console.WriteLine("SectorsPerCluster:\t{0:N0}", volumeBootRecord.BiosParameterBlock.SectorsPerCluster);
             Console.WriteLine("ReservedSectors:\t{0:N0}", volumeBootRecord.BiosParameterBlock.ReservedSectors);
             Console.WriteLine("NumberOfFats:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.NumberOfFats);
             Console.WriteLine("RootDirectoryEntries:\t{0:N0}", volumeBootRecord.BiosParameterBlock.RootDirectoryEntries);
             Console.WriteLine("TotalSectors16:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.TotalSectors16);
-            Console.WriteLine("MediaDescriptor:\t{0:N0}", volumeBootRecord.BiosParameterBlock.MediaDescriptor);
+            Console.WriteLine("MediaDescriptor:\t{0:X2}", volumeBootRecord.BiosParameterBlock.MediaDescriptor);
             Console.WriteLine("SectorsPerFat:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.SectorsPerFat);
             Console.WriteLine("SectorsPerTrack:\t{0:N0}", volumeBootRecord.BiosParameterBlock.SectorsPerTrack);
             Console.WriteLine("NumberOfHeads:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.NumberOfHeads);
@@ -181,8 +180,7 @@
             Console.WriteLine("MftMirrorFirstClusterNumber:\t{0:N0}", volumeBootRecord.BiosParameterBlock.MftMirrorFirstClusterNumber);
             Console.WriteLine("MftRecordSize:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.MftRecordSize);
             Console.WriteLine("IndexBlockSize:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.IndexBlockSize);
-            Console.WriteLine("VolumeSerialNumber:\t{0}", FormatBytes(volumeBootRecord.BiosParameterBlock.VolumeSerialNumber));
-            Console.WriteLine("VolumeSerialNumber:\t{0}", volumeBootRecord.GetVolumeSerialNumber());
+            Console.WriteLine("VolumeSerialNumber:\t{0} ({1})", FormatBytes(volumeBootRecord.BiosParameterBlock.VolumeSerialNumber), volumeBootRecord.GetVolumeSerialNumber());
             Console.WriteLine("Checksum:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.Checksum);
             Console.WriteLine("EndOfSectorMarker:\t{0:X4}", volumeBootRecord.EndOfSectorMarker);
         }
