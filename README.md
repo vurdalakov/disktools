@@ -17,3 +17,10 @@ Reads sectors from physical or logical disk to a file.
 ###### diskinfo
 
 Shows various disk information.
+
+##### Useful links
+
+* [NTFS.com](http://ntfs.com/)
+* [All the details of many versions of both MBR and OS Boot Records](http://thestarman.pcministry.com/asm/mbr/)
+* [Wikipedia](http://en.wikipedia.org/wiki/Volume_boot_record)
+* [Linux-NTFS Project](https://flatcap.org/linux-ntfs/downloads.html)
