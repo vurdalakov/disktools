@@ -47,5 +47,15 @@
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 426)]
         public Byte[] BootstrapCode;
         public UInt16 EndOfSectorMarker;
+
+        public String GetOemId()
+        {
+            return Encoding.ASCII.GetString(OemId).TrimEnd();
+        }
+
+        public String GetVolumeSerialNumber()
+        {
+            return String.Format("{0:X4}-{1:X4}", BitConverter.ToInt16(BiosParameterBlock.VolumeSerialNumber, 2), BitConverter.ToInt16(BiosParameterBlock.VolumeSerialNumber, 0));
+        }
     }
 }

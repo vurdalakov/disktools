@@ -159,7 +159,7 @@
             Console.WriteLine("\nVolume Boot Record (VBR):");
             Console.WriteLine("JumpInstruction:\t{0}", FormatBytes(volumeBootRecord.JumpInstruction));
             Console.WriteLine("OemId:\t\t\t{0}", FormatBytes(volumeBootRecord.OemId));
-            Console.WriteLine("OemId:\t\t\t{0}", Encoding.ASCII.GetString(volumeBootRecord.OemId).TrimEnd());
+            Console.WriteLine("OemId:\t\t\t{0}", volumeBootRecord.GetOemId());
             Console.WriteLine("BytesPerSector:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.BytesPerSector);
             Console.WriteLine("SectorsPerCluster:\t{0:N0}", volumeBootRecord.BiosParameterBlock.SectorsPerCluster);
             Console.WriteLine("ReservedSectors:\t{0:N0}", volumeBootRecord.BiosParameterBlock.ReservedSectors);
@@ -182,7 +182,7 @@
             Console.WriteLine("MftRecordSize:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.MftRecordSize);
             Console.WriteLine("IndexBlockSize:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.IndexBlockSize);
             Console.WriteLine("VolumeSerialNumber:\t{0}", FormatBytes(volumeBootRecord.BiosParameterBlock.VolumeSerialNumber));
-            Console.WriteLine("VolumeSerialNumber:\t{0:X4}-{1:X4}", BitConverter.ToInt16(volumeBootRecord.BiosParameterBlock.VolumeSerialNumber, 2), BitConverter.ToInt16(volumeBootRecord.BiosParameterBlock.VolumeSerialNumber, 0));
+            Console.WriteLine("VolumeSerialNumber:\t{0}", volumeBootRecord.GetVolumeSerialNumber());
             Console.WriteLine("Checksum:\t\t{0:N0}", volumeBootRecord.BiosParameterBlock.Checksum);
             Console.WriteLine("EndOfSectorMarker:\t{0:X4}", volumeBootRecord.EndOfSectorMarker);
         }
