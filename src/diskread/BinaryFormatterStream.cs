@@ -7,12 +7,17 @@
     public class BinaryFormatterStream : Stream
     {
         private Stream _stream;
-        private Int32 _blockSize;
+        private Int64 _offset = -1;
 
-        public BinaryFormatterStream(Stream stream, Int32 blockSize = 256)
+        public Int32 BlockSize { get; set; }
+        public Int64 InitialOffset { get; set; }
+
+        public BinaryFormatterStream(Stream stream)
         {
             _stream = stream;
-            _blockSize = blockSize;
+            
+            BlockSize = 256;
+            InitialOffset = 0;
         }
 
         public override bool CanRead { get { return false; } }
@@ -26,12 +31,17 @@
 
         public override void Write(byte[] buffer, int offset, int count)
         {
+            if (-1 == _offset)
+            {
+                _offset = InitialOffset;
+            }
+
             var chars = new Char[16];
 
             for (var pos = offset; pos < offset + count; )
             {
                 var stringBuilder = new StringBuilder(128);
-                stringBuilder.AppendFormat("{0:X08}  ", pos);
+                stringBuilder.AppendFormat("{0:X012}  ", _offset);
 
                 for (var i = 0; i < 16; i++)
                 {
@@ -40,16 +50,19 @@
                     pos++;
                 }
 
+                stringBuilder.Append(' ');
                 stringBuilder.Append(chars);
                 stringBuilder.Append(Environment.NewLine);
 
-                if (0 == (pos % _blockSize))
+                if (0 == (pos % BlockSize))
                 {
                     stringBuilder.Append(Environment.NewLine);
                 }
 
                 var bytes = Encoding.ASCII.GetBytes(stringBuilder.ToString());
                 _stream.Write(bytes, 0, bytes.Length);
+
+                _offset += 16;
             }
         }
 

@@ -43,12 +43,12 @@
 
                 Byte[] buffer = new Byte[65536]; // 64KB at once
 
-                using (Stream stream = GetStream(fileName, buffer.Length))
+                var fullSize = numberOfSectors * disk.BytesPerSector;
+                var numberOfFullChunks = fullSize / buffer.Length;
+                var offset = disk.SectorToOffset(firstSector);
+
+                using (Stream stream = GetStream(fileName, buffer.Length, offset))
                 {
-                    var fullSize = numberOfSectors * disk.BytesPerSector;
-                    var numberOfFullChunks = fullSize / buffer.Length;
-                    var offset = disk.SectorToOffset(firstSector);
-                    
                     for (int i = 0; i < numberOfFullChunks; i++)
                     {
                         disk.Read(offset, (UInt32)buffer.Length, ref buffer, true);
@@ -74,11 +74,15 @@
             }
         }
 
-        private Stream GetStream(String fileName, Int32 bufferSize)
+        private Stream GetStream(String fileName, Int32 bufferSize, Int64 offset)
         {
             if (String.IsNullOrEmpty(fileName))
             {
-                return new BinaryFormatterStream(Console.OpenStandardOutput(), 512);
+                return new BinaryFormatterStream(Console.OpenStandardOutput())
+                {
+                    BlockSize = 512,
+                    InitialOffset = offset
+                };
             }
             else
             {
