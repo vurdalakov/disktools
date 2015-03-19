@@ -9,12 +9,12 @@
         {
             try
             {
-                if ((_commandLineParser.FileNames.Length != 1) || !_commandLineParser.OptionHasValue("d") || !_commandLineParser.OptionHasValue("s"))
+                if ((_commandLineParser.FileNames.Length > 1) || !_commandLineParser.OptionHasValue("d") || !_commandLineParser.OptionHasValue("s"))
                 {
                     Help();
                 }
 
-                var fileName = _commandLineParser.FileNames[0];
+                var fileName = 1 == _commandLineParser.FileNames.Length ? _commandLineParser.FileNames[0] : null;
                 var diskNumber = _commandLineParser.GetOptionString("d").ToUpper()[0];
                 var firstSector = (UInt64)_commandLineParser.GetOptionInt("s", -1);
                 var numberOfSectors = (UInt32)_commandLineParser.GetOptionInt("n", 1);
@@ -43,7 +43,7 @@
 
                 Byte[] buffer = new Byte[65536]; // 64KB at once
 
-                using (var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None, buffer.Length))
+                using (Stream stream = GetStream(fileName, buffer.Length))
                 {
                     var fullSize = numberOfSectors * disk.BytesPerSector;
                     var numberOfFullChunks = fullSize / buffer.Length;
@@ -52,7 +52,7 @@
                     for (int i = 0; i < numberOfFullChunks; i++)
                     {
                         disk.Read(offset, (UInt32)buffer.Length, ref buffer, true);
-                        fileStream.Write(buffer, 0, buffer.Length);
+                        stream.Write(buffer, 0, buffer.Length);
 
                         offset += buffer.Length;
                     }
@@ -61,7 +61,7 @@
                     if (size > 0)
                     {
                         disk.Read(offset, (UInt32)size, ref buffer, true);
-                        fileStream.Write(buffer, 0, (Int32)size);
+                        stream.Write(buffer, 0, (Int32)size);
                     }
                 }
 
@@ -71,6 +71,18 @@
             {
                 Print("Error reading sectors: {0}", ex.Message);
                 return 1;
+            }
+        }
+
+        private Stream GetStream(String fileName, Int32 bufferSize)
+        {
+            if (String.IsNullOrEmpty(fileName))
+            {
+                return new BinaryFormatterStream(Console.OpenStandardOutput());
+            }
+            else
+            {
+                return new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize);
             }
         }
 
