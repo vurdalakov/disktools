@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("diskread")]
-[assembly: AssemblyDescription("Reads sectors from physical or logical disk to a file")]
+[assembly: AssemblyDescription("Dumps sectors from physical or logical disk to a file or screen")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Vurdalakov")]
 [assembly: AssemblyProduct("DosTools")]

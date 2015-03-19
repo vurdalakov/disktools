@@ -88,15 +88,16 @@
 
         protected override void Help()
         {
-            Console.WriteLine("DiskRead {0} | https://github.com/vurdalakov/disktools\n", ApplicationVersion);
-            Console.WriteLine("Reads sectors from physical or logical disk to a file.\n");
-            Console.WriteLine("Usage:\n\tdiskread <file name> -d:N -s:N -n:N [-silent]\n");
+            Console.WriteLine("DiskRead {0} | https://github.com/vurdalakov/disktools", ApplicationVersion);
+            Console.WriteLine("Dumps sectors from physical or logical disk to a file or screen.\n");
+            Console.WriteLine("Usage:\n\tdiskread [file name] -d:N -s:N [-n:N] [-silent]");
             Console.WriteLine("Options:\n\t-d:N - N can be 0-9 for physical disk or A-Z for logical disk");
             Console.WriteLine("\t-s:N - N is the number of the first sector to read");
             Console.WriteLine("\t-n:N - N is the number of sectors to read (default is 1)");
-            Console.WriteLine("\t-silent - no error messsages are shown; check the exit code\n");
-            Console.WriteLine("Examples:\n\treaddisk mbr.bin -d:0 -s:0");
-            Console.WriteLine("\treaddisk sectors-65-74.bin -d:C -s:65 -n:10\n");
+            Console.WriteLine("\t-silent - no error messsages are shown; check the exit code");
+            Console.WriteLine("Examples:\n\treaddisk mbr.bin -d:0 -s:0\t\t// dumps MBR to mbr.bin file");
+            Console.WriteLine("\treaddisk -d:0 -s:0\t\t\t// dumps MBR to screen");
+            Console.WriteLine("\treaddisk sectors-65-74.bin -d:C -s:65 -n:10");
             Console.WriteLine("Exit codes:\n\t0 - read operation succeeded\n\t1 - read operation failed\n\t-1 - invalid command line syntax\n");
             Environment.Exit(-1);
         }

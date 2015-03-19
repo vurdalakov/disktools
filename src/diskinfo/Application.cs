@@ -79,9 +79,9 @@
 
         protected override void Help()
         {
-            Console.WriteLine("DiskRead {0} | https://github.com/vurdalakov/disktools\n", ApplicationVersion);
-            Console.WriteLine("Reads sectors from physical or logical disk to a file.\n");
-            Console.WriteLine("Usage:\n\tdiskinfo <device name> | -l | -l:C | -p | -p:N [-silent]\n");
+            Console.WriteLine("DiskRead {0} | https://github.com/vurdalakov/disktools", ApplicationVersion);
+            Console.WriteLine("Prints various physical or logical disk information.\n");
+            Console.WriteLine("Usage:\n\tdiskinfo <device name> | -l | -l:C | -p | -p:N [-silent]");
             Console.WriteLine("Options:");
             Console.WriteLine("\t-l - prints list of logical disks");
             Console.WriteLine("\t-l:C - prints information about logical disk C (A, B, C, ...)");
