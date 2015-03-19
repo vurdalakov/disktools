@@ -26,11 +26,11 @@
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            var stringBuilder = new StringBuilder(128);
             var chars = new Char[16];
 
             for (var pos = offset; pos < offset + count; )
             {
+                var stringBuilder = new StringBuilder(128);
                 stringBuilder.AppendFormat("{0:X08}  ", pos);
 
                 for (var i = 0; i < 16; i++)
