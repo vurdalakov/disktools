@@ -7,10 +7,12 @@
     public class BinaryFormatterStream : Stream
     {
         private Stream _stream;
+        private Int32 _blockSize;
 
-        public BinaryFormatterStream(Stream stream)
+        public BinaryFormatterStream(Stream stream, Int32 blockSize = 256)
         {
             _stream = stream;
+            _blockSize = blockSize;
         }
 
         public override bool CanRead { get { return false; } }
@@ -41,7 +43,7 @@
                 stringBuilder.Append(chars);
                 stringBuilder.Append(Environment.NewLine);
 
-                if (0 == (pos % 512))
+                if (0 == (pos % _blockSize))
                 {
                     stringBuilder.Append(Environment.NewLine);
                 }

@@ -78,7 +78,7 @@
         {
             if (String.IsNullOrEmpty(fileName))
             {
-                return new BinaryFormatterStream(Console.OpenStandardOutput());
+                return new BinaryFormatterStream(Console.OpenStandardOutput(), 512);
             }
             else
             {
