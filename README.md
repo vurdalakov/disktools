@@ -20,6 +20,8 @@ Shows various disk information.
 
 ##### Useful links
 
+* [File Systems Technologies](https://technet.microsoft.com/en-us/library/cc778296.aspx) at TechNet: [NTFS Technical Reference](https://technet.microsoft.com/en-us/library/cc758691.aspx) and [FAT Technical Reference](https://technet.microsoft.com/en-us/library/cc758586.aspx)
+* [Local File Systems](https://msdn.microsoft.com/en-us/library/windows/desktop/aa364407.aspx) at MSDN
 * [NTFS.com](http://ntfs.com/)
 * [All the details of many versions of both MBR and OS Boot Records](http://thestarman.pcministry.com/asm/mbr/)
 * [Wikipedia](http://en.wikipedia.org/wiki/Volume_boot_record)
