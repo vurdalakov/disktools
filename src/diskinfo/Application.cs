@@ -182,18 +182,19 @@
             return stringBuilder.ToString().TrimEnd();
         }
 
-        protected override void Help()
+        protected override Int32 Help()
         {
             Console.WriteLine("DiskRead {0} | https://github.com/vurdalakov/disktools", ApplicationVersion);
             Console.WriteLine("Prints various physical or logical disk information.\n");
-            Console.WriteLine("Usage:\n\tdiskinfo <device name> | -l | -l:C | -p | -p:N [-silent]");
+            Console.WriteLine("Usage:\n    diskinfo <device name> | -l | -l:C | -p | -p:N [-silent]");
             Console.WriteLine("Options:");
-            Console.WriteLine("\t-l   - prints list of logical disks");
-            Console.WriteLine("\t-l:C - prints information about logical disk C (A, B, C, ...)");
-            Console.WriteLine("\t-p   - prints list of physical disks");
-            Console.WriteLine("\t-p:N - prints information about physical disk N (0, 1, ...)");
-            Console.WriteLine("\t-silent - no error messsages are shown; check the exit code\n");
-            Environment.Exit(-1);
+            Console.WriteLine("    -l   - prints list of logical disks");
+            Console.WriteLine("    -l:C - prints information about logical disk C (A, B, C, ...)");
+            Console.WriteLine("    -p   - prints list of physical disks");
+            Console.WriteLine("    -p:N - prints information about physical disk N (0, 1, ...)");
+            Console.WriteLine("    -silent - no error messsages are shown; check the exit code\n");
+            
+            return base.Help();
         }
     }
 }
