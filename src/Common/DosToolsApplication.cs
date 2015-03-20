@@ -51,9 +51,10 @@
 
         protected abstract Int32 Execute();
 
-        protected virtual void Help()
+        protected virtual Int32 Help()
         {
             Environment.Exit(-1);
+            return -1;
         }
 
         private Boolean _silent;

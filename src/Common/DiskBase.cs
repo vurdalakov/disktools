@@ -6,6 +6,33 @@
 
     public class DiskBase : IDisposable
     {
+        public static DiskBase GetDisk(String deviceName, Boolean readOnly)
+        {
+            if ((1 == deviceName.Length) || ((2 == deviceName.Length) && (':' == deviceName[1])))
+            {
+                var driveLetter = Char.ToUpper(deviceName[0]);
+                if ((driveLetter >= 'A') && (driveLetter <= 'Z'))
+                {
+                    return new LogicalDisk(driveLetter, readOnly);
+                }
+            }
+
+            UInt32 diskNumber;
+            if (UInt32.TryParse(deviceName, out diskNumber))
+            {
+                return new PhysicalDisk(diskNumber, readOnly);
+            }
+
+            if (deviceName.EndsWith(":"))
+            {
+                return new LogicalDisk(deviceName, readOnly);
+            }
+            else
+            {
+                return new PhysicalDisk(deviceName, readOnly);
+            }
+        }
+
         public String DeviceName { get; private set; }
 
         public DiskBase()
