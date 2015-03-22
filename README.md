@@ -18,7 +18,7 @@ Reads sectors from physical or logical disk to a file.
 
 Shows various disk information.
 
-##### Useful links
+##### Useful resources
 
 * [File Systems Technologies](https://technet.microsoft.com/en-us/library/cc778296.aspx) at TechNet: [NTFS Technical Reference](https://technet.microsoft.com/en-us/library/cc758691.aspx) and [FAT Technical Reference](https://technet.microsoft.com/en-us/library/cc758586.aspx)
 * [Local File Systems](https://msdn.microsoft.com/en-us/library/windows/desktop/aa364407.aspx) at MSDN

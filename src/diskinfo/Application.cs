@@ -28,13 +28,23 @@
                     {
                         var deviceName = _commandLineParser.GetOptionString("p");
 
-                        UInt32 diskNumber;
-                        if (UInt32.TryParse(deviceName, out diskNumber))
+                        if (deviceName.Equals("all", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            deviceName = PhysicalDisk.FormatDeviceName(diskNumber);
+                            foreach (var deviceName1 in PhysicalDisk.GetDeviceNames())
+                            {
+                                PrintPhysicalDiskInformation(deviceName1);
+                            }
                         }
+                        else
+                        {
+                            UInt32 diskNumber;
+                            if (UInt32.TryParse(deviceName, out diskNumber))
+                            {
+                                deviceName = PhysicalDisk.FormatDeviceName(diskNumber);
+                            }
 
-                        PrintPhysicalDiskInformation(deviceName);
+                            PrintPhysicalDiskInformation(deviceName);
+                        }
                     }
                     else
                     {
@@ -47,16 +57,26 @@
                     {
                         var deviceName = _commandLineParser.GetOptionString("l");
 
-                        if (1 == deviceName.Length)
+                        if (deviceName.Equals("all", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            var volume = Char.ToUpper(deviceName[0]);
-                            if ((volume >= 'A') && (volume <= 'Z'))
+                            foreach (var deviceName1 in LogicalDisk.GetDeviceNames())
                             {
-                                deviceName = LogicalDisk.FormatDeviceName(volume);
+                                PrintLogicalDiskInformation(deviceName1);
                             }
                         }
+                        else
+                        {
+                            if (1 == deviceName.Length)
+                            {
+                                var volume = Char.ToUpper(deviceName[0]);
+                                if ((volume >= 'A') && (volume <= 'Z'))
+                                {
+                                    deviceName = LogicalDisk.FormatDeviceName(volume);
+                                }
+                            }
 
-                        PrintLogicalDiskInformation(deviceName);
+                            PrintLogicalDiskInformation(deviceName);
+                        }
                     }
                     else
                     {
@@ -188,10 +208,12 @@
             Console.WriteLine("Prints various physical or logical disk information.\n");
             Console.WriteLine("Usage:\n    diskinfo <device name> | -l | -l:C | -p | -p:N [-silent]");
             Console.WriteLine("Options:");
-            Console.WriteLine("    -l   - prints list of logical disks");
-            Console.WriteLine("    -l:C - prints information about logical disk C (A, B, C, ...)");
-            Console.WriteLine("    -p   - prints list of physical disks");
-            Console.WriteLine("    -p:N - prints information about physical disk N (0, 1, ...)");
+            Console.WriteLine("    -l     - prints list of logical disks");
+            Console.WriteLine("    -l:C   - prints information about logical disk C (A, B, C, ...)");
+            Console.WriteLine("    -l:all - prints information about all logical disks");
+            Console.WriteLine("    -p     - prints list of physical disks");
+            Console.WriteLine("    -p:N   - prints information about physical disk N (0, 1, ...)");
+            Console.WriteLine("    -p:all - prints information about all physical disks");
             Console.WriteLine("    -silent - no error messsages are shown; check the exit code\n");
             
             return base.Help();
